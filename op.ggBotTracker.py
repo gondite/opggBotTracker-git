@@ -496,10 +496,20 @@ class LoLDefeatMonitor:
 # Ejemplo de uso
 if __name__ == "__main__":
     # Configuración
-    DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1428117587342131272/TwxeA76q8JnCCUZjJseWJfFapTWnmM_YjfYxL5RSNutT03cARS1soVzmFxK3qE4HE6UX"  # Reemplaza con tu webhook
-    SUMMONER_URL = "https://www.op.gg/es/lol/summoners/euw/FNC%20Kekles-2983?queue_type=SOLORANKED"
-    CHECK_INTERVAL = 80  # 5 minutos
+    # Obtener configuración desde .env
+    DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
+    SUMMONER_URL = os.getenv('SUMMONER_URL')
+    CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', 300))  # 300 por defecto si no existe
     
+    # Validar que las variables existen
+    if not DISCORD_WEBHOOK_URL:
+        print("❌ ERROR: DISCORD_WEBHOOK_URL no está configurado en .env")
+        exit(1)
+    if not SUMMONER_URL:
+        print("❌ ERROR: SUMMONER_URL no está configurado en .env")
+        exit(1)
+    
+    print("✅ Configuración cargada desde .env")
     # Crear y ejecutar el monitor
     monitor = LoLDefeatMonitor(
         webhook_url=DISCORD_WEBHOOK_URL,
